@@ -83,6 +83,24 @@
             </label>
           </div>
 
+          <div class="recipe-form-grid">
+            <label>
+              Catégorie
+              <select id="custom-category" name="category">
+                <option value="">Choisir une catégorie</option>
+                <option value="Végé">Végé</option>
+                <option value="Poisson">Poisson</option>
+                <option value="Viande">Viande</option>
+                <option value="Pizza/Quiches/Cake">Pizza/Quiches/Cake</option>
+                <option value="Recettes sucrées">Recettes sucrées</option>
+              </select>
+            </label>
+            <label>
+              Temps
+              <input id="custom-time" name="time" type="text" maxlength="30" value="30 min" />
+            </label>
+          </div>
+
           <label>
             Description
             <textarea id="custom-description" name="description" rows="3" maxlength="220"></textarea>
@@ -90,12 +108,12 @@
 
           <div class="recipe-form-grid">
             <label>
-              Temps
-              <input id="custom-time" name="time" type="text" maxlength="30" value="30 min" />
-            </label>
-            <label>
               Nombre de personnes
               <input id="custom-people" name="people" type="number" min="1" max="20" value="4" />
+            </label>
+            <label>
+              &nbsp;
+              <span class="form-placeholder"> </span>
             </label>
           </div>
 

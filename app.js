@@ -261,6 +261,7 @@ const customMealForm = document.getElementById('custom-meal-form');
 const closeCustomMealModalButton = document.getElementById('close-custom-meal-modal');
 const cancelCustomMealButton = document.getElementById('cancel-custom-meal');
 const STORAGE_KEY = 'saved-meals';
+const MEAL_CATEGORIES = ['Végé', 'Poisson', 'Viande', 'Pizza/Quiches/Cake', 'Recettes sucrées'];
 let currentMenu = [...defaultWeeklyMenu];
 let currentReplacementIndex = null;
 
@@ -270,6 +271,10 @@ function getSourceLabel(meal) {
 
 function getSourceClass(meal) {
   return meal?.source === 'custom' ? 'custom' : 'generated';
+}
+
+function getMealCategory(meal) {
+  return MEAL_CATEGORIES.includes(meal?.category) ? meal.category : 'Non classé';
 }
 
 function parseListField(value) {
@@ -340,34 +345,60 @@ function renderSavedMeals() {
     return;
   }
 
-  savedMealsContainer.innerHTML = savedMeals
-    .map(
-      (meal) => {
-        const sourceClass = getSourceClass(meal);
-        const sourceLabel = getSourceLabel(meal);
+  const groupedMeals = {};
+  MEAL_CATEGORIES.forEach((category) => {
+    groupedMeals[category] = savedMeals.filter((meal) => getMealCategory(meal) === category);
+  });
+  groupedMeals['Non classé'] = savedMeals.filter((meal) => !MEAL_CATEGORIES.includes(getMealCategory(meal)));
 
-        return `
-          <div class="saved-item ${sourceClass}" data-action="open-recipe" data-dish="${meal.dish || ''}">
-            <div>
-              <span class="source-badge ${sourceClass}">${sourceLabel}</span>
-              <strong>${meal.dish}</strong>
-              <span>${meal.equipment || 'Plat enregistré'}</span>
+  const groups = Object.entries(groupedMeals)
+    .filter(([, items]) => items.length)
+    .map(([category, items]) => {
+      const itemsMarkup = items
+        .map((meal) => {
+          const sourceClass = getSourceClass(meal);
+          const sourceLabel = getSourceLabel(meal);
+          const activeCategory = getMealCategory(meal);
+
+          return `
+            <div class="saved-item ${sourceClass}" data-action="open-recipe" data-dish="${meal.dish || ''}">
+              <div>
+                <span class="source-badge ${sourceClass}">${sourceLabel}</span>
+                <strong>${meal.dish}</strong>
+                <span>${meal.equipment || 'Plat enregistré'}</span>
+                <span class="category-badge">${activeCategory}</span>
+              </div>
+              <div style="display: flex; align-items: center; gap: 0.75rem;">
+                <select class="saved-category-select" data-dish="${meal.dish || ''}" aria-label="Catégorie du plat">
+                  <option value="">Non classé</option>
+                  ${MEAL_CATEGORIES.map(
+                    (option) => `<option value="${option}" ${meal.category === option ? 'selected' : ''}>${option}</option>`
+                  ).join('')}
+                </select>
+                <span class="recipe-indicator" title="Fiche recette disponible">i</span>
+                <button
+                  type="button"
+                  class="delete-saved"
+                  data-dish="${meal.dish || ''}"
+                >
+                  Retirer
+                </button>
+              </div>
             </div>
-            <div style="display: flex; align-items: center; gap: 0.75rem;">
-              <span class="recipe-indicator" title="Fiche recette disponible">i</span>
-              <button
-                type="button"
-                class="delete-saved"
-                data-dish="${meal.dish || ''}"
-              >
-                Retirer
-              </button>
-            </div>
-          </div>
-        `;
-      }
-    )
+          `;
+        })
+        .join('');
+
+      return `
+        <section class="saved-category-group">
+          <h3>${category}</h3>
+          <div class="saved-category-list">${itemsMarkup}</div>
+        </section>
+      `;
+    })
     .join('');
+
+  savedMealsContainer.innerHTML = groups;
 
   renderMenu(currentMenu);
 }
@@ -453,6 +484,7 @@ function openRecipeModal(meal) {
 
   const sourceClass = getSourceClass(meal);
   const sourceLabel = getSourceLabel(meal);
+  const category = getMealCategory(meal);
 
   recipeContent.innerHTML = `
     <div class="recipe-detail">
@@ -461,6 +493,7 @@ function openRecipeModal(meal) {
         <p>${meal.description || ''}</p>
         <div class="recipe-meta">
           <span class="source-badge ${sourceClass}">${sourceLabel}</span>
+          <span class="category-badge">${category}</span>
           <span>${meal.equipment || 'Matériel libre'}</span>
           <span>${meal.time || 'Temps variable'}</span>
           <span>${meal.people || 4} personnes</span>
@@ -631,6 +664,27 @@ savedMealsContainer.addEventListener('click', (event) => {
   }
 });
 
+savedMealsContainer.addEventListener('change', (event) => {
+  const categorySelect = event.target.closest('.saved-category-select');
+
+  if (!categorySelect) {
+    return;
+  }
+
+  const dish = categorySelect.dataset.dish;
+  const category = categorySelect.value;
+  const savedMeals = getSavedMeals();
+  const targetMeal = savedMeals.find((meal) => meal.dish === dish);
+
+  if (!targetMeal) {
+    return;
+  }
+
+  targetMeal.category = MEAL_CATEGORIES.includes(category) ? category : '';
+  saveMeals(savedMeals);
+  renderSavedMeals();
+});
+
 addCustomMealButton.addEventListener('click', openCustomMealModal);
 closeCustomMealModalButton.addEventListener('click', closeCustomMealModal);
 cancelCustomMealButton.addEventListener('click', closeCustomMealModal);
@@ -646,6 +700,7 @@ customMealForm.addEventListener('submit', (event) => {
   const description = document.getElementById('custom-description').value.trim();
   const equipment = document.getElementById('custom-equipment').value.trim() || 'Matériel libre';
   const time = document.getElementById('custom-time').value.trim() || '30 min';
+  const category = document.getElementById('custom-category').value;
   const people = Number(document.getElementById('custom-people').value) || 4;
   const ingredients = parseListField(document.getElementById('custom-ingredients').value);
   const steps = parseListField(document.getElementById('custom-steps').value);
@@ -662,6 +717,7 @@ customMealForm.addEventListener('submit', (event) => {
     people,
     ingredients,
     steps,
+    category: MEAL_CATEGORIES.includes(category) ? category : '',
     source: 'custom'
   });
 
