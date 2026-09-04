@@ -275,6 +275,63 @@ h1 {
   letter-spacing: 0.06em;
 }
 
+.saved-category-group.category-vege {
+  --category-bg: #eaf7ea;
+  --category-color: #2b6b39;
+  --category-border: #bfdcbf;
+}
+
+.saved-category-group.category-poisson {
+  --category-bg: #eaf4ff;
+  --category-color: #1d5e9a;
+  --category-border: #c6dbef;
+}
+
+.saved-category-group.category-viande {
+  --category-bg: #fdeceb;
+  --category-color: #9c3b31;
+  --category-border: #e8beb7;
+}
+
+.saved-category-group.category-pizza-quiches-cake {
+  --category-bg: #fff1e7;
+  --category-color: #b75b18;
+  --category-border: #f0cfaf;
+}
+
+.saved-category-group.category-recettes-sucrées {
+  --category-bg: #f3ebff;
+  --category-color: #7046a8;
+  --category-border: #dfd0f2;
+}
+
+.saved-category-group.category-non-classe {
+  --category-bg: #f3f3f3;
+  --category-color: #5a5a5a;
+  --category-border: #d8d8d8;
+}
+
+.saved-category-group.category-vege h3,
+.saved-category-group.category-poisson h3,
+.saved-category-group.category-viande h3,
+.saved-category-group.category-pizza-quiches-cake h3,
+.saved-category-group.category-recettes-sucrées h3,
+.saved-category-group.category-non-classe h3 {
+  color: var(--category-color);
+}
+
+.saved-category-group.category-vege .saved-category-list,
+.saved-category-group.category-poisson .saved-category-list,
+.saved-category-group.category-viande .saved-category-list,
+.saved-category-group.category-pizza-quiches-cake .saved-category-list,
+.saved-category-group.category-recettes-sucrées .saved-category-list,
+.saved-category-group.category-non-classe .saved-category-list {
+  padding: 0.65rem 0.7rem;
+  border: 1px solid var(--category-border);
+  border-radius: 14px;
+  background: var(--category-bg);
+}
+
 .saved-category-list {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -342,6 +399,42 @@ h1 {
   color: var(--primary-deep);
   font-size: 0.68rem;
   font-weight: 700;
+}
+
+.saved-item .category-badge.category-vege,
+.recipe-meta .category-badge.category-vege {
+  background: #eaf7ea;
+  color: #2b6b39;
+}
+
+.saved-item .category-badge.category-poisson,
+.recipe-meta .category-badge.category-poisson {
+  background: #eaf4ff;
+  color: #1d5e9a;
+}
+
+.saved-item .category-badge.category-viande,
+.recipe-meta .category-badge.category-viande {
+  background: #fdeceb;
+  color: #9c3b31;
+}
+
+.saved-item .category-badge.category-pizza-quiches-cake,
+.recipe-meta .category-badge.category-pizza-quiches-cake {
+  background: #fff1e7;
+  color: #b75b18;
+}
+
+.saved-item .category-badge.category-recettes-sucrées,
+.recipe-meta .category-badge.category-recettes-sucrées {
+  background: #f3ebff;
+  color: #7046a8;
+}
+
+.saved-item .category-badge.category-non-classe,
+.recipe-meta .category-badge.category-non-classe {
+  background: #f3f3f3;
+  color: #5a5a5a;
 }
 
 .saved-item .saved-category-select {

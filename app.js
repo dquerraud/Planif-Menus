@@ -277,6 +277,17 @@ function getMealCategory(meal) {
   return MEAL_CATEGORIES.includes(meal?.category) ? meal.category : 'Non classé';
 }
 
+function getCategoryClass(category) {
+  const safeCategory = (category || 'non-classe')
+    .trim()
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9]+/g, '-');
+
+  return `category-${safeCategory.replace(/^-+|-+$/g, '') || 'non-classe'}`;
+}
+
 function parseListField(value) {
   return (value || '')
     .split(/\n/)
@@ -354,11 +365,13 @@ function renderSavedMeals() {
   const groups = Object.entries(groupedMeals)
     .filter(([, items]) => items.length)
     .map(([category, items]) => {
+      const categoryClass = getCategoryClass(category);
       const itemsMarkup = items
         .map((meal) => {
           const sourceClass = getSourceClass(meal);
           const sourceLabel = getSourceLabel(meal);
           const activeCategory = getMealCategory(meal);
+          const mealCategoryClass = getCategoryClass(activeCategory);
 
           return `
             <div class="saved-item ${sourceClass}" data-action="open-recipe" data-dish="${meal.dish || ''}">
@@ -366,7 +379,7 @@ function renderSavedMeals() {
                 <span class="source-badge ${sourceClass}">${sourceLabel}</span>
                 <strong>${meal.dish}</strong>
                 <span>${meal.equipment || 'Plat enregistré'}</span>
-                <span class="category-badge">${activeCategory}</span>
+                <span class="category-badge ${mealCategoryClass}">${activeCategory}</span>
               </div>
               <div style="display: flex; align-items: center; gap: 0.75rem;">
                 <select class="saved-category-select" data-dish="${meal.dish || ''}" aria-label="Catégorie du plat">
@@ -390,7 +403,7 @@ function renderSavedMeals() {
         .join('');
 
       return `
-        <section class="saved-category-group">
+        <section class="saved-category-group ${categoryClass}">
           <h3>${category}</h3>
           <div class="saved-category-list">${itemsMarkup}</div>
         </section>
@@ -485,6 +498,7 @@ function openRecipeModal(meal) {
   const sourceClass = getSourceClass(meal);
   const sourceLabel = getSourceLabel(meal);
   const category = getMealCategory(meal);
+  const categoryClass = getCategoryClass(category);
 
   recipeContent.innerHTML = `
     <div class="recipe-detail">
@@ -493,7 +507,7 @@ function openRecipeModal(meal) {
         <p>${meal.description || ''}</p>
         <div class="recipe-meta">
           <span class="source-badge ${sourceClass}">${sourceLabel}</span>
-          <span class="category-badge">${category}</span>
+          <span class="category-badge ${categoryClass}">${category}</span>
           <span>${meal.equipment || 'Matériel libre'}</span>
           <span>${meal.time || 'Temps variable'}</span>
           <span>${meal.people || 4} personnes</span>
