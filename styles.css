@@ -1,14 +1,17 @@
 :root {
-  --bg: #f6f2eb;
-  --panel: #fffdf9;
-  --card: #ffffff;
-  --primary: #2f6f4f;
-  --primary-soft: #e3f1e8;
-  --accent: #d98c2f;
-  --text: #1f2a2b;
-  --muted: #60706c;
-  --border: #e7ded1;
-  --shadow: 0 12px 28px rgba(51, 61, 60, 0.08);
+  --bg: #f9f3f0;
+  --panel: #fffdfb;
+  --card: #fffdfb;
+  --primary: #b95445;
+  --primary-deep: #7b2d24;
+  --primary-soft: #f7deda;
+  --accent: #d76a4d;
+  --accent-soft: #fbe3dc;
+  --gold: #e8b574;
+  --text: #2c1f1d;
+  --muted: #6a4d49;
+  --border: #efd8d0;
+  --shadow: 0 16px 32px rgba(123, 45, 36, 0.12);
 }
 
 * { box-sizing: border-box; }
@@ -18,7 +21,7 @@ html { scroll-behavior: smooth; }
 body {
   margin: 0;
   font-family: "Segoe UI", sans-serif;
-  background: linear-gradient(180deg, #f6f2eb 0%, #f2efe9 100%);
+  background: linear-gradient(180deg, #fffaf5 0%, #f5efe9 100%);
   color: var(--text);
 }
 
@@ -28,9 +31,10 @@ body {
 }
 
 .topbar {
-  background: linear-gradient(135deg, #234e3c 0%, #2f6f4f 100%);
+  background: linear-gradient(135deg, #6d1e19 0%, var(--primary) 100%);
   color: white;
   padding: 2.5rem 0 3rem;
+  box-shadow: 0 8px 24px rgba(123, 45, 36, 0.2);
 }
 
 .eyebrow {
@@ -54,10 +58,11 @@ h1 {
 
 .summary span {
   background: rgba(255, 255, 255, 0.12);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.22);
   border-radius: 999px;
   padding: 0.5rem 0.9rem;
   font-size: 0.9rem;
+  backdrop-filter: blur(4px);
 }
 
 .controls {
@@ -79,20 +84,20 @@ h1 {
   font-size: 0.9rem;
   font-weight: 700;
   cursor: pointer;
-  transition: transform 0.2s ease, opacity 0.2s ease;
+  transition: transform 0.2s ease, opacity 0.2s ease, box-shadow 0.2s ease;
 }
 
 #generate-menu,
 .save-button,
 .primary-button {
-  background: var(--primary);
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-deep) 100%);
   color: white;
-  box-shadow: var(--shadow);
+  box-shadow: 0 12px 20px rgba(123, 45, 36, 0.18);
 }
 
 .secondary-button,
 .delete-saved {
-  background: #f1ede6;
+  background: #f3ebdf;
   color: var(--text);
 }
 
@@ -102,7 +107,8 @@ h1 {
 .save-button:hover,
 .delete-saved:hover {
   transform: translateY(-1px);
-  opacity: 0.96;
+  opacity: 0.97;
+  box-shadow: 0 12px 22px rgba(31, 77, 69, 0.12);
 }
 
 .meal-plan {
@@ -115,13 +121,13 @@ h1 {
 .meal-card {
   background: var(--card);
   border: 1px solid var(--border);
-  border-radius: 20px;
+  border-radius: 22px;
   box-shadow: var(--shadow);
   overflow: hidden;
 }
 
 .meal-header {
-  background: var(--primary-soft);
+  background: linear-gradient(180deg, var(--primary-soft) 0%, #f9e9e5 100%);
   padding: 1.1rem 1.2rem;
   border-bottom: 1px solid var(--border);
 }
@@ -137,7 +143,7 @@ h1 {
 .day-tag {
   display: inline-flex;
   align-items: center;
-  background: var(--primary);
+  background: var(--primary-deep);
   color: white;
   padding: 0.45rem 0.8rem;
   border-radius: 999px;
@@ -178,7 +184,7 @@ h1 {
 }
 
 .detail-box {
-  background: #faf6ef;
+  background: linear-gradient(180deg, #fffaf6 0%, #f8f1ea 100%);
   border: 1px solid var(--border);
   border-radius: 12px;
   padding: 0.7rem 0.8rem;
@@ -272,10 +278,12 @@ h1 {
 
 .saved-item.generated {
   border-left: 5px solid var(--primary);
+  background: linear-gradient(180deg, #ffffff 0%, #fffaf8 100%);
 }
 
 .saved-item.custom {
-  border-left: 5px solid #d97706;
+  border-left: 5px solid var(--accent);
+  background: linear-gradient(180deg, #ffffff 0%, #fff7f4 100%);
 }
 
 .saved-item:hover {
@@ -308,12 +316,12 @@ h1 {
 
 .saved-item .source-badge.generated {
   background: var(--primary-soft);
-  color: var(--primary);
+  color: var(--primary-deep);
 }
 
 .saved-item .source-badge.custom {
-  background: #fff3e0;
-  color: #b45309;
+  background: var(--accent-soft);
+  color: var(--accent);
 }
 
 .saved-item .recipe-indicator {
@@ -330,8 +338,8 @@ h1 {
 }
 
 .saved-item.custom .recipe-indicator {
-  background: #fff3e0;
-  color: #b45309;
+  background: var(--accent-soft);
+  color: var(--accent);
 }
 
 .saved-empty {
@@ -464,12 +472,12 @@ h1 {
 
 .recipe-meta span.source-badge.generated {
   background: var(--primary-soft);
-  color: var(--primary);
+  color: var(--primary-deep);
 }
 
 .recipe-meta span.source-badge.custom {
-  background: #fff3e0;
-  color: #b45309;
+  background: var(--accent-soft);
+  color: var(--accent);
 }
 
 .custom-meal-modal-content {
