@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Planificateur de repas familial</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="container">
+        <p class="eyebrow">Famille de 4</p>
+        <h1>Planning repas de la semaine</h1>
+        <div class="summary">
+          <span>2 adultes</span>
+          <span>2 adolescents</span>
+          <span>Cookéo</span>
+          <span>Plaques à induction</span>
+          <span>Four</span>
+        </div>
+      </div>
+    </header>
+
+    <main class="container">
+      <section class="controls">
+        <button id="generate-menu" type="button">Générer un menu</button>
+        <button id="toggle-saved" type="button" class="secondary-button">Voir les sauvegardes</button>
+      </section>
+      <section id="meal-plan" class="meal-plan" aria-live="polite"></section>
+
+      <section id="saved-section" class="saved-section hidden">
+        <div class="saved-header">
+          <h2>Mes propositions enregistrées</h2>
+          <div class="saved-header-actions">
+            <button id="add-custom-meal" type="button" class="primary-button">Ajouter un plat</button>
+            <button id="clear-saved" type="button" class="secondary-button">Tout supprimer</button>
+          </div>
+        </div>
+        <div id="saved-meals" class="saved-list"></div>
+      </section>
+    </main>
+
+    <div id="replace-modal" class="modal hidden" aria-hidden="true">
+      <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="replace-title">
+        <div class="modal-header">
+          <h3 id="replace-title">Remplacer le plat</h3>
+          <button id="close-modal" type="button" class="close-button" aria-label="Fermer">×</button>
+        </div>
+
+        <label class="search-label" for="saved-search">Rechercher un plat enregistré</label>
+        <input id="saved-search" type="text" placeholder="Tapez les premières lettres du titre" />
+
+        <div id="replacement-list" class="replacement-list"></div>
+      </div>
+    </div>
+
+    <div id="recipe-modal" class="modal hidden" aria-hidden="true">
+      <div class="modal-content recipe-modal-content" role="dialog" aria-modal="true" aria-labelledby="recipe-title">
+        <div class="modal-header">
+          <h3 id="recipe-title">Fiche recette</h3>
+          <button id="close-recipe-modal" type="button" class="close-button" aria-label="Fermer">×</button>
+        </div>
+        <div id="recipe-content"></div>
+      </div>
+    </div>
+
+    <div id="custom-meal-modal" class="modal hidden" aria-hidden="true">
+      <div class="modal-content custom-meal-modal-content" role="dialog" aria-modal="true" aria-labelledby="custom-meal-title">
+        <div class="modal-header">
+          <h3 id="custom-meal-title">Ajouter un plat</h3>
+          <button id="close-custom-meal-modal" type="button" class="close-button" aria-label="Fermer">×</button>
+        </div>
+
+        <form id="custom-meal-form">
+          <div class="recipe-form-grid">
+            <label>
+              Nom du plat
+              <input id="custom-dish" name="dish" type="text" maxlength="80" required />
+            </label>
+            <label>
+              Matériel
+              <input id="custom-equipment" name="equipment" type="text" maxlength="40" value="Matériel libre" />
+            </label>
+          </div>
+
+          <label>
+            Description
+            <textarea id="custom-description" name="description" rows="3" maxlength="220"></textarea>
+          </label>
+
+          <div class="recipe-form-grid">
+            <label>
+              Temps
+              <input id="custom-time" name="time" type="text" maxlength="30" value="30 min" />
+            </label>
+            <label>
+              Nombre de personnes
+              <input id="custom-people" name="people" type="number" min="1" max="20" value="4" />
+            </label>
+          </div>
+
+          <div class="recipe-form-columns">
+            <label>
+              Ingrédients
+              <textarea id="custom-ingredients" name="ingredients" rows="8" placeholder="Un ingrédient par ligne" required></textarea>
+            </label>
+            <label>
+              Préparation
+              <textarea id="custom-steps" name="steps" rows="8" placeholder="Une étape par ligne" required></textarea>
+            </label>
+          </div>
+
+          <div class="modal-actions">
+            <button type="button" id="cancel-custom-meal" class="secondary-button">Annuler</button>
+            <button type="submit" class="save-button">Enregistrer ce plat</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <script src="meal-agent.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
