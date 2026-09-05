@@ -293,11 +293,14 @@ function generateWeekMenu(criteria = {}) {
     ...mealCatalog.oven
   ];
 
+  const usedDishes = new Set();
+
   return structure.map((slot) => {
     const pool = categories.filter((meal) => {
       const sameType = meal.type === slot.type;
       const allowed = slot.allowedEquipment.includes(meal.equipment);
-      return sameType && allowed;
+      const notUsed = !usedDishes.has(meal.dish);
+      return sameType && allowed && notUsed;
     });
 
     const chosen = shuffle(pool)[0] || {
@@ -308,6 +311,8 @@ function generateWeekMenu(criteria = {}) {
       ingredients: ['Ingrédients selon la recette choisie'],
       steps: ['Préparer à l’envie de la famille.']
     };
+
+    usedDishes.add(chosen.dish);
 
     return {
       day: slot.day,
