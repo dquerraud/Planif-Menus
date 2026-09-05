@@ -22,6 +22,19 @@
     </header>
 
     <main class="container">
+      <section id="sync-section" class="sync-section">
+        <div class="sync-info">
+          <span>Code de synchronisation :</span>
+          <strong id="sync-code-display"></strong>
+          <button id="copy-sync-code" type="button" class="secondary-button">Copier</button>
+        </div>
+        <div class="sync-actions">
+          <input id="sync-code-input" type="text" placeholder="Coller le code d'un autre appareil" maxlength="8" />
+          <button id="apply-sync-code" type="button" class="secondary-button">Utiliser sur cet appareil</button>
+        </div>
+        <p id="sync-status" class="sync-status"></p>
+      </section>
+
       <section class="controls">
         <button id="generate-menu" type="button">Générer un menu</button>
         <button id="toggle-saved" type="button" class="secondary-button">Voir les sauvegardes</button>
@@ -136,6 +149,10 @@
       </div>
     </div>
 
+    <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore-compat.js"></script>
+    <script src="firebase-config.js"></script>
+    <script src="sync.js"></script>
     <script src="meal-agent.js"></script>
     <script src="app.js"></script>
   </body>

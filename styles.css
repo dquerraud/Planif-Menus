@@ -73,6 +73,56 @@ h1 {
   flex-wrap: wrap;
 }
 
+.sync-section {
+  margin-top: 1.5rem;
+  padding: 0.9rem 1.1rem;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.8rem 1.2rem;
+}
+
+.sync-info {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.sync-info strong {
+  color: var(--primary-deep);
+  letter-spacing: 0.08em;
+  font-size: 1rem;
+}
+
+.sync-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.sync-actions input {
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 0.6rem 1rem;
+  font-size: 0.9rem;
+  background: #fffdfb;
+  color: var(--text);
+}
+
+.sync-status {
+  width: 100%;
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
 #generate-menu,
 .secondary-button,
 .primary-button,

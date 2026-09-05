@@ -260,6 +260,11 @@ const customMealModal = document.getElementById('custom-meal-modal');
 const customMealForm = document.getElementById('custom-meal-form');
 const closeCustomMealModalButton = document.getElementById('close-custom-meal-modal');
 const cancelCustomMealButton = document.getElementById('cancel-custom-meal');
+const syncCodeDisplay = document.getElementById('sync-code-display');
+const copySyncCodeButton = document.getElementById('copy-sync-code');
+const syncCodeInput = document.getElementById('sync-code-input');
+const applySyncCodeButton = document.getElementById('apply-sync-code');
+const syncStatus = document.getElementById('sync-status');
 const STORAGE_KEY = 'saved-meals';
 const MEAL_CATEGORIES = ['Végé', 'Poisson', 'Viande', 'Pizza/Quiches/Cake', 'Recettes sucrées'];
 let currentMenu = [...defaultWeeklyMenu];
@@ -306,6 +311,7 @@ function getSavedMeals() {
 
 function saveMeals(meals) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(meals));
+  window.mealSync?.push(meals);
 }
 
 function getMealKey(meal) {
@@ -771,6 +777,41 @@ savedSearchInput.addEventListener('input', (event) => {
   renderReplacementList(savedMeals.filter((meal) => (meal.dish || '').toLowerCase().includes(query.toLowerCase())));
 });
 
+function renderSyncUI() {
+  if (!window.mealSync || !syncCodeDisplay) return;
+  syncCodeDisplay.textContent = window.mealSync.getCode();
+}
+
+copySyncCodeButton?.addEventListener('click', async () => {
+  const code = window.mealSync.getCode();
+  try {
+    await navigator.clipboard.writeText(code);
+    syncStatus.textContent = 'Code copié !';
+  } catch (error) {
+    syncStatus.textContent = `Code : ${code}`;
+  }
+});
+
+applySyncCodeButton?.addEventListener('click', async () => {
+  const code = syncCodeInput.value.trim();
+  if (!code) return;
+
+  window.mealSync.setCode(code);
+  syncStatus.textContent = 'Synchronisation en cours...';
+
+  const remoteMeals = await window.mealSync.pull();
+  if (remoteMeals) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(remoteMeals));
+    renderSavedMeals();
+    syncStatus.textContent = 'Sauvegardes synchronisées.';
+  } else {
+    syncStatus.textContent = 'Aucune donnée trouvée pour ce code — elle sera créée à la prochaine sauvegarde.';
+  }
+
+  renderSyncUI();
+  syncCodeInput.value = '';
+});
+
 closeModalButton.addEventListener('click', closeReplaceModal);
 closeRecipeModalButton.addEventListener('click', closeRecipeModal);
 
@@ -786,5 +827,18 @@ recipeModal.addEventListener('click', (event) => {
   }
 });
 
-renderMenu(currentMenu);
-renderSavedMeals();
+(async function initApp() {
+  renderMenu(currentMenu);
+  renderSyncUI();
+
+  if (window.mealSync) {
+    const remoteMeals = await window.mealSync.pull();
+    if (remoteMeals) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(remoteMeals));
+    } else if (getSavedMeals().length) {
+      window.mealSync.push(getSavedMeals());
+    }
+  }
+
+  renderSavedMeals();
+})();
