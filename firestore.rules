@@ -2,9 +2,9 @@ rules_version = '2';
 
 // À coller dans Firebase Console > Firestore Database > Règles.
 // Pas d'authentification : l'accès à un document est protégé uniquement par la
-// connaissance de son code (8 caractères aléatoires). "list" n'est pas autorisé,
-// donc impossible d'énumérer les codes existants — seule une lecture/écriture
-// directe par code exact fonctionne.
+// connaissance de son code (le code fixe utilisé par l'appli, voir sync.js).
+// "list" n'est pas autorisé, donc impossible d'énumérer les codes existants —
+// seule une lecture/écriture directe par code exact fonctionne.
 service cloud.firestore {
   match /databases/{database}/documents {
     match /syncs/{code} {

@@ -1,9 +1,13 @@
 // Synchronisation externe des plats sauvegardés (Firestore), avec repli silencieux
 // sur le stockage local si Firebase n'est pas configuré ou injoignable — l'application
 // doit toujours fonctionner sans backend (hébergement statique type GitHub/GitLab Pages).
+//
+// Un seul foyer utilise cette appli : le code de synchronisation est donc fixe (pas de
+// panneau à afficher, pas de code à recopier d'un appareil à l'autre). Ce code n'est pas
+// un secret : il est visible dans le dépôt public, ce qui est acceptable puisqu'il ne
+// protège que des recettes, pas des données sensibles.
 (function () {
-  const SYNC_CODE_KEY = 'meal-sync-code';
-  const CODE_CHARS = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  const FIXED_SYNC_CODE = 'FAMILLEQUERRAUD';
   let db = null;
   let initTried = false;
 
@@ -25,33 +29,12 @@
     return db;
   }
 
-  function generateCode() {
-    let code = '';
-    for (let i = 0; i < 8; i += 1) {
-      code += CODE_CHARS[Math.floor(Math.random() * CODE_CHARS.length)];
-    }
-    return code;
-  }
-
-  function getCode() {
-    let code = localStorage.getItem(SYNC_CODE_KEY);
-    if (!code) {
-      code = generateCode();
-      localStorage.setItem(SYNC_CODE_KEY, code);
-    }
-    return code;
-  }
-
-  function setCode(code) {
-    localStorage.setItem(SYNC_CODE_KEY, code.trim().toUpperCase());
-  }
-
   async function pull() {
     const database = init();
     if (!database) return null;
 
     try {
-      const docSnap = await database.collection('syncs').doc(getCode()).get();
+      const docSnap = await database.collection('syncs').doc(FIXED_SYNC_CODE).get();
       return docSnap.exists ? docSnap.data().savedMeals || [] : null;
     } catch (error) {
       console.warn('Lecture de la synchronisation impossible :', error);
@@ -64,7 +47,7 @@
     if (!database) return;
 
     try {
-      await database.collection('syncs').doc(getCode()).set({
+      await database.collection('syncs').doc(FIXED_SYNC_CODE).set({
         savedMeals,
         updatedAt: Date.now()
       });
@@ -73,5 +56,5 @@
     }
   }
 
-  window.mealSync = { getCode, setCode, generateCode, pull, push };
+  window.mealSync = { pull, push };
 })();
