@@ -123,6 +123,13 @@ h1 {
   color: var(--muted);
 }
 
+a.secondary-button,
+a.primary-button {
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+}
+
 #generate-menu,
 .secondary-button,
 .primary-button,
