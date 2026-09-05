@@ -383,6 +383,19 @@ function replaceMealWithSaved(index, selectedMeal) {
     return;
   }
 
+  const duplicate = currentMenu.find(
+    (meal, idx) => idx !== currentReplacementIndex && meal.dish === selectedMeal.dish
+  );
+
+  if (duplicate) {
+    const confirmed = window.confirm(
+      `« ${selectedMeal.dish} » est déjà prévu ${duplicate.day} cette semaine. Le choisir quand même ?`
+    );
+    if (!confirmed) {
+      return;
+    }
+  }
+
   currentMenu[currentReplacementIndex] = {
     ...selectedMeal,
     day: currentMenu[currentReplacementIndex].day,
