@@ -7,7 +7,7 @@
 // un secret : il est visible dans le dépôt public, ce qui est acceptable puisqu'il ne
 // protège que des recettes, pas des données sensibles.
 (function () {
-  const FIXED_SYNC_CODE = 'FAMILLEQUERRAUD';
+  const FIXED_SYNC_CODE = 'FAMILLEBOITTIAUXQUERRAUD';
   let db = null;
   let initTried = false;
 
